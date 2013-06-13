@@ -10,7 +10,9 @@
     getCookies($username, $password, $cookies_file);
     $feeds = getFeeds($cookies_file);
     forceUpdateFeeds($feeds, $cookies_file);
-    unlink($cookies_file);
+    if(is_file($cookies_file)){
+		unlink($cookies_file);
+	}
 
     function getCookies($username, $password, $cookies_file) {
 		$newsblurLogin = "http://newsblur.com/reader/login";
