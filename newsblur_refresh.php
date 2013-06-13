@@ -15,6 +15,11 @@
     function getCookies($username, $password, $cookies_file) {
 		$newsblurLogin = "http://newsblur.com/reader/login";
         $res = sendRequest("POST", $newsblurLogin, NULL, "login-username=" . rawurlencode($username) . "&login-password=" . rawurlencode($password).'&next=/&submit=log%20in', true, false, false, $cookies_file, true);
+		
+		if(strpos($res['data'],'<ul class="errorlist">') !== false){
+			echo 'Failed connecting! Exiting!';
+			exit;
+		}
 	}
 
     function getFeeds($cookies_file) {
@@ -136,9 +141,11 @@
 
         curl_close($curl);
 		
-		$cooky = file_get_contents($cookieFile);
-		$cooky = str_replace('#HttpOnly_', '', $cooky);
-		file_put_contents($cookieFile, $cooky);
+		if(is_file($cookieFile)){
+			$cooky = file_get_contents($cookieFile);
+			$cooky = str_replace('#HttpOnly_', '', $cooky);
+			file_put_contents($cookieFile, $cooky);
+		}
 
         return $response;
     }
